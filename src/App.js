@@ -12,9 +12,9 @@ function App() {
   const { data } = useGetTodosQuery();
   const [todo, setTodo] = useState("");
   // isedit
-   const [newedit, setnewedit] = useState("");
+  const [newedit, setnewedit] = useState("");
   // edit
-  const [edit, setedit] = useState([]);
+  const [edit, setedit] = useState("");
 
   const [addTodo] = usePostTodoMutation();
   const [DeleteTodo] = useDeleteTodoMutation();
@@ -33,6 +33,7 @@ function App() {
       e.preventDefault();
       UpdateTodo({ userId: 1, id: edit.id, title: newedit, completed: false });
       setnewedit("");
+      setedit("");
     }
   };
 
@@ -42,22 +43,21 @@ function App() {
         {/* add */}
         <input
           type="text"
-          value={todo}
-          onChange={(e) => setTodo(e.target.value)}
-          placeholder="add..."
+          value={edit ? (newedit ? newedit : edit.title) : todo}
+          onChange={
+            edit
+              ? (e) => setnewedit(e.target.value)
+              : (e) => setTodo(e.target.value)
+          }
+          placeholder={edit ? "update..." : "add..."}
         ></input>
-        <button onClick={handlesubmit}>Add</button>
-        {/* update */}
-        <input
-          type="text"
-          value={newedit ? newedit : edit.title}
-          onChange={(e) => setnewedit(e.target.value)}
-          placeholder="update..."
-        ></input>
-        <button onClick={handlesave}>save</button>
+        <button
+          className={edit ? "Editbtn" : "submitbtn"}
+          onClick={edit ? handlesave : handlesubmit}
+        >
+          {edit ? "save" : "add"}
+        </button>
       </div>
-
-
 
       <header className="App-header">
         {data?.map((todo) => (
